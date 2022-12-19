@@ -1,0 +1,5 @@
+# add request here
+std_msgs/Bool s
+
+---
+# add response here
