@@ -7,7 +7,6 @@ import rclpy
 import sys, os, yaml
 from rclpy.node import Node
 from builtin_interfaces.msg import Duration
-from romeona_interfaces import enableTracker
 from romeona_control.Jacobian import pos_inverse_kinematics, vel_inverse_kinematics
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory , JointTrajectoryPoint
@@ -20,10 +19,10 @@ class Proximity_detector(Node):
         super().__init__('proximity_detector')
 
         # subscript joint state from GZ
-        self.joint_state = self.create_subscription(JointState,'/joint_state',self.joint_state_callback,10)
+        self.joint_state = self.create_subscription(JointState,'/joint_states',self.joint_state_callback,10)
 
         # subscript pos_ref
-        self.position_referance = self.create_subscription(Float64MultiArray,'/final_position',self.final_pos_callback,10)
+        self.position_referance = self.create_subscription(Float64MultiArray,'/p_f',self.final_pos_callback,10)
 
 
         # create publisher
@@ -48,14 +47,18 @@ class Proximity_detector(Node):
         
     def timer_callback(self):
         arrive = Bool()
+        arrive.data = False
         R,P,R_e,p_e,H0_e = forward_kin(self.ang_pos)
+        print(p_e)
         diff = np.subtract(np.array(self.pos_ref),np.array(p_e[0]))
-        if abs(diff[0]) <= self.threshold and abs(diff[1]) <= self.threshold and abs(diff[2]) <= self.threshold:  
-            arrive = True   
+        print('abs',abs(diff))
+        if (abs(diff) <= self.threshold).all():  
+            arrive.data = True   
+            
         else:
-            arrive = False
+            arrive.data = False
+        
         self.reach.publish(arrive)
-
     
  
 def main(args=None):

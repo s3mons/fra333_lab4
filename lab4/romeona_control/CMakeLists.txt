@@ -35,6 +35,7 @@ install(PROGRAMS
   scripts/generator.py
   scripts/scheduler.py
   scripts/proximity_detector.py
+  scripts/marker.py
 
   DESTINATION lib/${PROJECT_NAME}
 )

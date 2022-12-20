@@ -28,7 +28,7 @@ class Tracker(Node):
 
 
         # create publisher and publishtopic to gazebo
-        publish_topic = "/joint_velocity_controller/commands"
+        publish_topic = "/velocity_controllers/commands"
         self.Joint_state_pub = self.create_publisher(Float64MultiArray,publish_topic,10)
 
         # timer
@@ -38,25 +38,11 @@ class Tracker(Node):
         # # user variables
         self.last_point = False
         self.enable = True
-        self.q = [ 0.0 , 0.0 , 0.0 ]
-        self.qr = [0.0,0.0,0.0]
-        self.qr_dot = [0.0,0.0,0.0]
+        self.q = np.array([0.0,0.0,0.0])
+        self.qr = np.array([0.0,0.0,0.0])
+        self.qr_dot = np.array([0.0,0.0,0.0])
         self.intigral = np.array([0.0,0.0,0.0])
 
-
-        # self.joints = ['joint_1','joint_2','joint_3']
-        # self.start_positions = [0.0, 0.0, 0.0]
-        # self.goal_positions = [0.0, 0.0, 0.0]
-        # self.setpoint_position = self.start_positions
-        # self.i = 0
-        # self.vel_init = [0.0, 0.0, 0.0]
-        # self.pos_init = [0., 0.0, 0.]
-        # self.is_cal = True
-        # self.cal_ang = [0, 0, 0]
-        # self.cal_acc = [0, 0, 0]
-        # self.cur_pos = [0., 0., 0.]
-
-        # self.keep_l = [0.,0.,0.] 
 
     def joint_states_callback(self,msg):
         self.q = np.array(msg.position)
@@ -79,11 +65,11 @@ class Tracker(Node):
 
     
     def timer_callback(self):
-        Kp = 1
-        Ki = 1
+        Kp = 0.5
+        Ki = 0.01
         if self.enable == True and self.last_point == False:
             self.intigral += self.qr - self.q
-            u = self.qr_dot + (Kp) *(self.qr-self.q)+(Ki) * self.intigral
+            u = self.qr_dot + np.dot(Kp,(self.qr-self.q))+np.dot(Ki,self.intigral)
             response = u.tolist()
             Trajectory_Tracker = Float64MultiArray()
             Trajectory_Tracker.data = response
@@ -91,7 +77,7 @@ class Tracker(Node):
             
         else:
             response = [ 0.0 , 0.0 , 0.0 ]
-            
+            print('finish')
             pass
        
  

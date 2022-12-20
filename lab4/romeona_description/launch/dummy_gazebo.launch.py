@@ -1,7 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
@@ -12,6 +12,7 @@ from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 
 from launch_ros.substitutions import FindPackageShare
 from launch.event_handlers import OnProcessExit
+
 
 def generate_launch_description():
 
@@ -41,6 +42,18 @@ def generate_launch_description():
         'use_sim_time': True}] # add other parameters here if required
     )
 
+    rviz_file_name = 'description_rviz.rviz'
+    rviz_file_path = os.path.join(
+        get_package_share_directory('romeona_description'),
+        'config',
+        rviz_file_name
+    )
+    rviz_Node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz',
+        arguments=['-d', rviz_file_path],
+        output='screen')
 
 
     gazebo = IncludeLaunchDescription(
@@ -91,20 +104,26 @@ def generate_launch_description():
         executable="tracker.py",
         
     )
+    marker = Node(
+        package="romeona_control",
+        executable="marker.py",
+        
+    )
 
     # Run the node
     return LaunchDescription([
-
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
         joint_state_broadcaster_spawner,
         robot_controller_spawner,
         control_node,
-        generator,
-        proximity_detector,
-        scheduler,
-        tracker
-    ])
+        rviz_Node,
+        TimerAction(actions = [tracker], period=5.0),
+        TimerAction(actions = [generator], period=6.0),
+        TimerAction(actions = [proximity_detector], period=7.0),
+        TimerAction(actions = [marker], period=8.0),
+        TimerAction(actions = [scheduler], period=9.0),])
+        
 
 

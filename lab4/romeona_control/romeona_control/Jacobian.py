@@ -67,7 +67,7 @@ def forward_kin(q):
     p_e = Position[:,:,3]
     #print(Tra_x,"\n",Rot_x,"\n",Tra_z,"\n",Rot_z)
     # print(p_e - np.array([1,1,1]))
-    print(Position[:,:,1])
+    # print(Position[:,:,1])
     return Rotation,Position,R_e,p_e,H0_e
 
 forward_kin([1.57,0,0])
@@ -119,13 +119,13 @@ def pos_inverse_kinematics(p):
     s_2 = (-l_3*s_3)*(g1*((x**2+y**2)**0.5)-l_1) + (l_2 + l_3*c_3)*(z-h)
     q_2 = np.arctan2(s_2,c_2)
 
-    return np.array([q_1,q_2,q_3])
+    return [q_1,q_2,q_3]
 
 def vel_inverse_kinematics(q,p_dot):
     A = np.array(Jacobian(q))
     J = A[3:]
     J_inv = np.linalg.inv(J)
     q_dot = J_inv @ p_dot
-    return q_dot
+    return q_dot.tolist()
 
 # print(np.subtract(np.array([1,2,3]),np.array([3,2,3])))

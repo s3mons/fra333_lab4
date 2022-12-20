@@ -7,7 +7,6 @@ import rclpy
 import sys, os, yaml
 from rclpy.node import Node
 from builtin_interfaces.msg import Duration
-from romeona_interfaces import enableTracker
 from romeona_control.Jacobian import pos_inverse_kinematics, vel_inverse_kinematics
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory , JointTrajectoryPoint
@@ -25,7 +24,7 @@ class Generator(Node):
 
 
         # create publisher
-        publish_topic = "/velocity_controllers/command"
+        publish_topic = "/reference/joint_states"
         # self.pos_publisher = self.create_publisher(Float64MultiArray,publish_topic, 10)
         self.vel_command_publisher = self.create_publisher(JointTrajectoryPoint,publish_topic, 10)
 
@@ -35,10 +34,10 @@ class Generator(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
         # variable
-        # self.initial_pos = [0.0, 0.0, 0.0]
-        # self.final_pos = [0.0, 0.0, 0.0]
-        # self.time = 2
-    
+        self.initial_pos = [0.669, 0.0, 0.29]
+        self.final_pos = [0.669, 0.0, 0.29]
+        self.time = 0.1
+        self.dt, self.t = 0.1,0.0
 
     def initial_position_callback(self, msg):
         self.initial_pos = msg.data
@@ -53,6 +52,7 @@ class Generator(Node):
         i = 0
         f = 1
         t = self.time
+
         a0 = i
         a1 = 0
         a2 = 0
@@ -60,11 +60,17 @@ class Generator(Node):
         a4 = -15/(t**4)
         a5 = 6/(t**5)
 
-        s = a0 + a1*t + a2*(t**2) + a3*(t**3) + a4*(t**4) + a5*(t**5)
-        s_dot = a1 + 2*a2*t + 3*a3*(t**2) + 4*a4*(t**3) + 5*a5*(t**4)
+        if self.t <= self.time:
+            
+            s = a0 + a1*self.t + a2*(self.t**2) + a3*(self.t**3) + a4*(self.t**4) + a5*(self.t**5)
+            s_dot = a1 + 2*a2*self.t + 3*a3*(self.t**2) + 4*a4*(self.t**3) + 5*a5*(self.t**4)
+        else:
+            s = a0 + a1*t + a2*(t**2) + a3*(t**3) + a4*(t**4) + a5*(t**5)
+            s_dot = 0
 
+        self.t += self.dt
         p_r = (1-s)*np.array(self.initial_pos) + s*np.array(self.final_pos)
-        v_r = s_dot*(self.final_pos-self.initial_pos)
+        v_r = s_dot*(np.array(self.final_pos)-np.array(self.initial_pos))
 
         q_r = pos_inverse_kinematics(p_r)
         q_r_dot = vel_inverse_kinematics(q_r,v_r)
