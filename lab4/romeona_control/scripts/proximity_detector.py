@@ -34,7 +34,7 @@ class Proximity_detector(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
         # variable
-        self.threshold = 0.1
+        self.threshold = 0.01
         self.ang_pos = [0.0, 0.0, 0.0]
         self.pos_ref = [0.0, 0.0, 0.0]
 

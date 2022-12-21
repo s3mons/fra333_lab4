@@ -33,10 +33,15 @@ class Scheduler(Node):
         timer_period = 0.1
         # self.timer = self.create_timer(timer_period, self.timer_callback)
 
+        with open(r'romeona_control/config/via_point.yaml') as file:
+            via_point = yaml.load(file, Loader=yaml.FullLoader)
+        self.via_point = via_point['via_point']
+        self.N = len(self.via_point)
+
         # variable
         self.reach = False
         self.point_idx = 1
-        self.via_point = [[0.5,0.,0.],[0.55,0.,0.], [0.55,0.35,0.],[0.525,0.,0.],[0.525,0.35,0.]]
+        # self.via_point = [[0.5,0.,0.],[0.55,0.,0.], [0.55,0.35,0.],[0.525,0.,0.],[0.525,0.35,0.]]
         # self.initial_pos = [0.0, 0.1, 0.2]
         # self.final_pos = [0.0, 0.2, 0.3]
         self.time = 5.0

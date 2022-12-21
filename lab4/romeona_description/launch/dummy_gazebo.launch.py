@@ -123,7 +123,8 @@ def generate_launch_description():
         TimerAction(actions = [generator], period=6.0),
         TimerAction(actions = [proximity_detector], period=7.0),
         TimerAction(actions = [marker], period=8.0),
-        TimerAction(actions = [scheduler], period=9.0),])
+        TimerAction(actions = [scheduler], period=9.0),
+        ])
         
 
 

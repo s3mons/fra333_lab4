@@ -33,8 +33,8 @@ class marker_node(Node):
         self.position = np.array([0.,0.,0.])
 
     def q_callback(self,msg):
-        temp = forward_kin(msg.position)
-        self.position = temp[-1][:3,3]
+        Rotation,Position,R_e,p_e,H0_e = forward_kin(msg.position)
+        self.position = p_e[0]
 
     def timer_callback(self):
 
@@ -44,9 +44,9 @@ class marker_node(Node):
         pos.x = self.position[0]
         pos.y = self.position[1]
         pos.z = self.position[2]
-        # if(pos.z < 0.145):
-        self.Marker.points.append(pos)
-        self.Marker_pub.publish(self.Marker)
+        if(pos.z < 0.145):
+            self.Marker.points.append(pos)
+            self.Marker_pub.publish(self.Marker)
 
 
 

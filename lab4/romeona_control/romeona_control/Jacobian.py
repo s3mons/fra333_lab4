@@ -2,13 +2,17 @@ import numpy as np
 import math
 
 def forward_kin(q):
-    DH_table = ([[0,0,0.3,0.],
-                [0.16,math.pi/2,0.,0.],
-                [0.35,0.,0.,0.]])
+    h = 0.135
+    l1 = 0.04
+    l2 = 0.15
+    l3 = 0.12
+    DH_table = ([[0,0,h,0.],
+                [l1,math.pi/2,0.,0.],
+                [l2,0.,0.,0.]])
     P = [1,1,1]
     H = np.identity(4)
     joint = 3
-    H3_e = [[0.,0.,1.,0.16],
+    H3_e = [[0.,0.,1.,l3],
             [1.,0.,0.,0.],
             [0.,1.,0.,0.],
             [0.,0.,0.,1.]]
@@ -68,6 +72,7 @@ def forward_kin(q):
     #print(Tra_x,"\n",Rot_x,"\n",Tra_z,"\n",Rot_z)
     # print(p_e - np.array([1,1,1]))
     # print(Position[:,:,1])
+    print(p_e)
     return Rotation,Position,R_e,p_e,H0_e
 
 forward_kin([1.57,0,0])
@@ -90,10 +95,10 @@ def Jacobian(q):
 def pos_inverse_kinematics(p):
     # setup parameters
     flag = True
-    h = 0.3
-    l_1 = 0.16
-    l_2 = 0.35
-    l_3 = 0.16
+    h = 0.135
+    l_1 = 0.04
+    l_2 = 0.15
+    l_3 = 0.12
 
     x = p[0]
     y = p[1]

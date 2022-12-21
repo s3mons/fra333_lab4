@@ -63,6 +63,7 @@ install(
   launch 
   scripts
   romeona_control
+  config
   DESTINATION share/${PROJECT_NAME}
 )
 

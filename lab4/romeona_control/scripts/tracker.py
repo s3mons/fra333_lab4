@@ -65,8 +65,8 @@ class Tracker(Node):
 
     
     def timer_callback(self):
-        Kp = 0.5
-        Ki = 0.01
+        Kp = 2.5
+        Ki = 0.2
         if self.enable == True and self.last_point == False:
             self.intigral += self.qr - self.q
             u = self.qr_dot + np.dot(Kp,(self.qr-self.q))+np.dot(Ki,self.intigral)

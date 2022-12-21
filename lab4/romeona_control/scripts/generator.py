@@ -34,8 +34,8 @@ class Generator(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
         # variable
-        self.initial_pos = [0.669, 0.0, 0.29]
-        self.final_pos = [0.669, 0.0, 0.29]
+        self.initial_pos = [0.309,0.,0.134]
+        self.final_pos = [0.309,0.,0.134]
         self.time = 0.1
         self.dt, self.t = 0.1,0.0
 
