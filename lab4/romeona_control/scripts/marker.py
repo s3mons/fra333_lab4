@@ -16,14 +16,14 @@ class marker_node(Node):
         self.q_sub = self.create_subscription(JointState,"/joint_states" ,self.q_callback, 10)
         self.Marker = Marker()
         self.Marker.header.frame_id = "/world"
-        # self.Marker.type = 8
-        self.Marker.type = 4
-        self.Marker.scale.x = 0.02
-        self.Marker.scale.y = 0.02
-        self.Marker.scale.z = 0.02
+        self.Marker.type = 8
+        # self.Marker.type = 4
+        self.Marker.scale.x = 0.01
+        self.Marker.scale.y = 0.01
+        self.Marker.scale.z = 0.01
 
-        self.Marker.color.r = 255/255 
-        self.Marker.color.g = 165/255
+        self.Marker.color.r = 220/255 
+        self.Marker.color.g = 50/255
         self.Marker.color.b = 0.0
         self.Marker.color.a = 1.0
 
@@ -47,6 +47,9 @@ class marker_node(Node):
         if(pos.z < 0.145):
             self.Marker.points.append(pos)
             self.Marker_pub.publish(self.Marker)
+        
+
+        
 
 
 

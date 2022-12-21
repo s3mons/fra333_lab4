@@ -72,7 +72,7 @@ def forward_kin(q):
     #print(Tra_x,"\n",Rot_x,"\n",Tra_z,"\n",Rot_z)
     # print(p_e - np.array([1,1,1]))
     # print(Position[:,:,1])
-    print(p_e)
+    # print(p_e)
     return Rotation,Position,R_e,p_e,H0_e
 
 forward_kin([1.57,0,0])
